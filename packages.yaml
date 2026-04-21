@@ -1,0 +1,19 @@
+dependencies:
+  - fastapi
+  - langchain
+  - langchain-anthropic
+  - langchain-community
+  - langchain-groq
+  - langchain-openai
+  - langchain-tavily
+  - langgraph
+  - pydantic-settings
+  - python-dotenv
+  - pyyaml
+  - streamlit
+  - uvicorn
+
+dev:
+  - httpx
+  - pytest
+  - ruff
