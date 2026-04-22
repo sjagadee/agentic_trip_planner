@@ -14,7 +14,9 @@ class ConfigLoader:
     def __init__(self, config_path: str = None):
         load_dotenv()
         if config_path is None:
-            config_path = os.path.join(os.path.dirname(__file__), "..", "config", "config.yaml")
+            config_path = os.path.join(
+                os.path.dirname(__file__), "..", "config", "config.yaml"
+            )
         with open(os.path.abspath(config_path), "r") as f:
             data = yaml.safe_load(f)
         for key, value in data.items():

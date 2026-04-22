@@ -1,9 +1,10 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Literal, Optional, Any
 
 from langchain.chat_models import init_chat_model
 
 from utils.config_loader import ConfigLoader
+
 
 class ModelLoader(BaseModel):
     model_provider: Literal["openai", "groq"] = "openai"
@@ -12,8 +13,7 @@ class ModelLoader(BaseModel):
     def model_post_init(self, __context: Any) -> None:
         self.config = ConfigLoader()
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     def load_llm(self):
         """
@@ -29,6 +29,6 @@ class ModelLoader(BaseModel):
             model_name = self.config.llm.groq.model_name
         else:
             raise ValueError(f"Unknown model provider: {self.model_provider}")
-        
-        if model_name is not None:    
+
+        if model_name is not None:
             return init_chat_model(model_name=model_name)
