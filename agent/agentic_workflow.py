@@ -35,8 +35,7 @@ class GraphBuilder:
         graph_builder.add_edge("agent", END)
 
         self.graph = graph_builder.compile()
-
         return self.graph
 
     def __call__(self):
-        pass
+        return self.build_graph()
