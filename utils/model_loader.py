@@ -7,6 +7,7 @@ from utils.config_loader import ConfigLoader
 
 
 class ModelLoader(BaseModel):
+
     model_provider: Literal["openai", "groq"] = "openai"
     config: Optional[ConfigLoader] = Field(default=None, exclude=True)
 

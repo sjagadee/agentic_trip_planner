@@ -1,10 +1,10 @@
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.prebuilt import ToolNode, tools_condition
 
-# from tools.weather_info_tool import WeatherInfoTool
-# from tools.place_search_tool import PlaceSearchTool
-# from tools.expense_calculator_tool import CalculatorTool
-# from tools.currency_converter_tool import CurrencyConverterTool
+from tools.weather_info_tool import WeatherInfoTool
+from tools.place_search_tool import PlaceSearchTool
+from tools.expense_calculator_tool import CalculatorTool
+from tools.currency_converter_tool import CurrencyConverterTool
 
 from utils.model_loader import ModelLoader
 
@@ -13,9 +13,29 @@ from prompt_library.prompt import SYSTEM_PROMPT
 
 class GraphBuilder:
 
-    def __init__(self):
+    def __init__(self, model_provider: str = "openai"):
         self.system_prompt = SYSTEM_PROMPT
+        self.model_loader = ModelLoader(model_provider=model_provider)
+        self.llm = self.model_loader.load_llm()
         self.tools = []
+
+        self.weather_tool = WeatherInfoTool()
+        self.place_search_tool = PlaceSearchTool()
+        self.expense_calculator_tool = CalculatorTool()
+        self.currency_converter_tool = CurrencyConverterTool()
+
+        self.tools.extend(
+            [
+                self.weather_tool,
+                self.place_search_tool,
+                self.expense_calculator_tool,
+                self.currency_converter_tool,
+            ]
+        )
+
+        self.llm_with_tools = self.llm.bind_tools(tools=self.tools)
+
+        self.graph = None
 
     def agent_function(self, state: MessagesState):
         """Main agent function"""
