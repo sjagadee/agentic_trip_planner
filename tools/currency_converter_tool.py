@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain.tools import BaseTool, tool
 from dotenv import load_dotenv
 
-from utils.currency_converter import CurrencyConverterService
+from services.currency_converter_service import CurrencyConverterService
 
 
 class CurrencyConverterTool:

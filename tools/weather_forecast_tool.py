@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 from langchain.tools import BaseTool, tool
 from dotenv import load_dotenv
 
-from utils.weather_info import WeatherForecastService
+from services.weather_forecast_service import WeatherForecastService
 
 
-class WeatherInfoTool:
+class WeatherForecastTool:
     def __init__(self):
         load_dotenv()
         self.api_key = os.getenv("WEATHER_API_KEY")
