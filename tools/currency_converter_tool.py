@@ -1,8 +1,7 @@
 import os
-from typing import Any, Dict, Optional, List
+from typing import List
 from dotenv import load_dotenv
-from langchain.tools import BaseTool, tool
-from dotenv import load_dotenv
+from langchain.tools import tool
 
 from services.currency_converter_service import CurrencyConverterService
 
