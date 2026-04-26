@@ -250,8 +250,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+if "response_data" not in st.session_state:
+    st.session_state.response_data = None
 
 with st.form(key="query_form", clear_on_submit=True):
     user_input = st.text_input(
@@ -263,15 +263,32 @@ with st.form(key="query_form", clear_on_submit=True):
 if submit_button and user_input.strip():
     try:
         with st.spinner("Crafting your bespoke itinerary…"):
-            payload = {"question": user_input}
+            payload = {"query": user_input}
             response = requests.post(f"{BASE_URL}/query", json=payload)
+
+        with st.expander("Debug", expanded=False):
+            st.write("**Status:**", response.status_code)
+            st.json(response.json())
 
         if response.status_code == 200:
             answer = response.json().get("answer", "No itinerary was returned.")
-            timestamp = datetime.datetime.now().strftime("%B %d, %Y · %H:%M")
+            st.session_state.response_data = {
+                "answer": answer,
+                "timestamp": datetime.datetime.now().strftime("%B %d, %Y · %H:%M"),
+            }
+        else:
+            st.error(f"Backend error {response.status_code}: {response.text}")
+            st.session_state.response_data = None
 
-            st.markdown(
-                f"""
+    except Exception as e:
+        st.error(f"Unable to reach the travel concierge: {e}")
+        st.session_state.response_data = None
+
+if st.session_state.response_data:
+    answer = st.session_state.response_data["answer"]
+    timestamp = st.session_state.response_data["timestamp"]
+    st.markdown(
+        f"""
 <div class="response-wrap">
     <div class="response-label">Your Itinerary</div>
     <div class="response-title">Travel Plan</div>
@@ -283,10 +300,5 @@ if submit_button and user_input.strip():
     </div>
 </div>
 """,
-                unsafe_allow_html=True,
-            )
-
-    except Exception as e:
-        st.error(
-            "Unable to reach the travel concierge. Please ensure the backend service is running."
-        )
+        unsafe_allow_html=True,
+    )

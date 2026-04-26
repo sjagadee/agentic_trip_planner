@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from langchain_core.messages import HumanMessage
 
 from agent.agentic_workflow import GraphBuilder
 
@@ -28,7 +29,7 @@ async def query_travel_agent(query: QueryRequest):
 
         print(f"Graph in PNG format saved as graph.png in {os.getcwd()}")
 
-        messages = {"messages": [query.question]}
+        messages = {"messages": [HumanMessage(content=query.query)]}
         output = reactive_app.invoke(messages)
 
         # capture last message from output

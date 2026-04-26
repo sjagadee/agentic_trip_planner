@@ -32,4 +32,4 @@ class ModelLoader(BaseModel):
             raise ValueError(f"Unknown model provider: {self.model_provider}")
 
         if model_name is not None:
-            return init_chat_model(model_name=model_name)
+            return init_chat_model(model=model_name, model_provider=self.model_provider, temperature=0.7)
