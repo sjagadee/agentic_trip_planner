@@ -11,5 +11,5 @@ class CalculatorService:
 
     def divide(self, a: float, b: float) -> float:
         if b == 0:
-            return None
+            raise ValueError("Cannot divide by zero")
         return a / b

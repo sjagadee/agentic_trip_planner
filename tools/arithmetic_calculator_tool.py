@@ -4,7 +4,7 @@ from langchain.tools import tool
 from services.calculator_service import CalculatorService
 
 
-class ArithmaticCalculatorTool:
+class ArithmeticCalculatorTool:
     def __init__(self):
         self.calculator_service = CalculatorService()
         self.calculator_tool_list = self._setup_tools()
@@ -54,17 +54,20 @@ class ArithmaticCalculatorTool:
             return self.calculator_service.multiply(a, b)
 
         @tool
-        def divide_tool(a: float, b: float) -> float:
+        def divide_tool(a: float, b: float) -> str:
             """
             Returns the quotient of two numbers
 
             Args:
                 a (float): The first number
-                b (float): The second number
+                b (float): The second number (must not be zero)
 
             Returns:
-                float: The quotient of the two numbers
+                str: The quotient or an error message if division by zero
             """
-            return self.calculator_service.divide(a, b)
+            try:
+                return str(self.calculator_service.divide(a, b))
+            except ValueError as e:
+                return str(e)
 
         return [add_tool, subtract_tool, multiply_tool, divide_tool]

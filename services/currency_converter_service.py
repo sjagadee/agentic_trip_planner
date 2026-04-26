@@ -1,3 +1,5 @@
+from typing import Optional
+
 import requests
 
 
@@ -8,15 +10,7 @@ class CurrencyConverterService:
 
     def convert_currency(
         self, from_currency: str, to_currency: str, amount: float
-    ) -> float:
-        try:
-            url = f"{self.base_url}/{self.api_key}/pair/{from_currency}/{to_currency}/{amount}"
-            
-            response = requests.get(url)
-            return (
-                response.json()["conversion_result"]
-                if response.status_code == 200
-                else None
-            )
-        except Exception as e:
-            raise e
+    ) -> Optional[float]:
+        url = f"{self.base_url}/{self.api_key}/pair/{from_currency}/{to_currency}/{amount}"
+        response = requests.get(url, timeout=10)
+        return response.json()["conversion_result"] if response.status_code == 200 else None
