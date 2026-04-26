@@ -25,6 +25,8 @@ And Voyage gives you back:
 
 Everything in one clean, formatted response.
 
+Once the itinerary is displayed, a **Download Itinerary** button appears — click it to save the plan as a Markdown file (`.md`) named after your query, e.g. `7_days_in_tokyo_in_april.md`.
+
 ---
 
 ## How it works
@@ -91,7 +93,8 @@ TravelPlanner/
 │   └── prompt.py               # System prompt that shapes how the agent responds
 ├── utils/
 │   ├── model_loader.py         # Loads the right LLM based on config
-│   └── config_loader.py        # Reads config/config.yaml
+│   ├── config_loader.py        # Reads config/config.yaml
+│   └── save_to_document.py     # Formats and saves itineraries to .md or .txt files
 ├── config/
 │   └── config.yaml             # Model names and providers
 ├── main.py                     # FastAPI app — the /query endpoint

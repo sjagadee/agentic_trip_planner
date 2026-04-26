@@ -1,3 +1,4 @@
+import re
 import streamlit as st
 import datetime
 import requests
@@ -149,6 +150,28 @@ st.markdown(
     transform: scale(0.99) !important;
 }
 
+/* ── Download button ── */
+.stDownloadButton > button {
+    background: transparent !important;
+    border: 1px solid rgba(201,168,76,0.35) !important;
+    color: rgba(201,168,76,0.75) !important;
+    font-family: 'Nunito Sans', sans-serif !important;
+    font-size: 0.62rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.42em !important;
+    text-transform: uppercase !important;
+    padding: 0.7rem 2rem !important;
+    border-radius: 0 !important;
+    margin-top: 1rem !important;
+    transition: all 0.25s ease !important;
+}
+
+.stDownloadButton > button:hover {
+    background: rgba(201,168,76,0.07) !important;
+    border-color: rgba(201,168,76,0.65) !important;
+    color: #c9a84c !important;
+}
+
 /* ── Spinner ── */
 [data-testid="stSpinner"] > div {
     border-top-color: #c9a84c !important;
@@ -274,6 +297,7 @@ if submit_button and user_input.strip():
             answer = response.json().get("answer", "No itinerary was returned.")
             st.session_state.response_data = {
                 "answer": answer,
+                "query": user_input,
                 "timestamp": datetime.datetime.now().strftime("%B %d, %Y · %H:%M"),
             }
         else:
@@ -286,6 +310,7 @@ if submit_button and user_input.strip():
 
 if st.session_state.response_data:
     answer = st.session_state.response_data["answer"]
+    query = st.session_state.response_data["query"]
     timestamp = st.session_state.response_data["timestamp"]
     st.markdown(
         f"""
@@ -301,4 +326,13 @@ if st.session_state.response_data:
 </div>
 """,
         unsafe_allow_html=True,
+    )
+
+    slug = re.sub(r"\s+", "_", re.sub(r"[^\w\s-]", "", query.lower().strip()))[:50].rstrip("_")
+    download_content = f"# Travel Itinerary\n\n**Query:** {query}  \n**Generated:** {timestamp}\n\n---\n\n{answer}"
+    st.download_button(
+        label="Download Itinerary",
+        data=download_content,
+        file_name=f"{slug}.md",
+        mime="text/markdown",
     )
